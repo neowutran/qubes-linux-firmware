@@ -12,7 +12,7 @@ FETCH_CMD := wget --no-use-server-timestamps -q -O
 # Fedora distributes those files only inside the .src.rpm. So always download
 # it from ftp.qubes-os.org.
 URLS := \
-    https://ftp.qubes-os.org/distfiles/linux-firmware-20180402.tar.xz
+    https://ftp.qubes-os.org/distfiles/linux-firmware-20180402.tar.xz \
     https://ftp.qubes-os.org/distfiles/microcode_amd_fam17h.bin
 
 ALL_URLS := $(URLS)
