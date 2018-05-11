@@ -10,7 +10,7 @@
 
 Name:		linux-firmware
 Version:	20180402
-Release:	%{firmware_release}.git%{checkout}.qubes1%{?dist}
+Release:	%{firmware_release}.git%{checkout}.qubes2%{?dist}
 Summary:	Firmware files used by the Linux kernel
 License:	GPL+ and GPLv2+ and MIT and Redistributable, no modification permitted
 URL:		http://www.kernel.org/
