@@ -9,11 +9,11 @@ UNTRUSTED_SUFF := .UNTRUSTED
 
 FETCH_CMD := wget --no-use-server-timestamps -q -O
 
+VERSION := $(shell cat version)
 # Fedora distributes those files only inside the .src.rpm. So always download
 # it from ftp.qubes-os.org.
 URLS := \
-    https://ftp.qubes-os.org/distfiles/linux-firmware-20180402.tar.xz \
-    https://ftp.qubes-os.org/distfiles/microcode_amd_fam17h.bin
+    https://www.kernel.org/pub/linux/kernel/firmware/linux-firmware-$(VERSION).tar.xz
 
 ALL_URLS := $(URLS)
 ALL_FILES := $(notdir $(ALL_URLS))
