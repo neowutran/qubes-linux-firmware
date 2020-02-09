@@ -10,8 +10,6 @@ UNTRUSTED_SUFF := .UNTRUSTED
 FETCH_CMD := wget --no-use-server-timestamps -q -O
 
 VERSION := $(shell cat version)
-# Fedora distributes those files only inside the .src.rpm. So always download
-# it from ftp.qubes-os.org.
 URLS := \
     https://www.kernel.org/pub/linux/kernel/firmware/linux-firmware-$(VERSION).tar.xz
 
