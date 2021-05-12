@@ -12,14 +12,17 @@ SRC_DIR ?= qubes-src
 
 DISTFILES_MIRROR ?= https://www.kernel.org/pub/linux/kernel/firmware/
 UNTRUSTED_SUFF := .UNTRUSTED
-FETCH_CMD := wget --no-use-server-timestamps -q -O
 
 SHELL := bash
 
 .PHONY: get-sources verify-sources clean clean-sources
 
+ifeq ($(FETCH_CMD),)
+$(error "You can not run this Makefile without having FETCH_CMD defined")
+endif
+
 %: %.sha512
-	@$(FETCH_CMD) $@$(UNTRUSTED_SUFF) $(DISTFILES_MIRROR)$@
+	@$(FETCH_CMD) $@$(UNTRUSTED_SUFF) -- $(DISTFILES_MIRROR)$@
 	@sha512sum --status -c <(printf "$$(cat $<)  -\n") <$@$(UNTRUSTED_SUFF) || \
 		{ echo "Wrong SHA512 checksum on $@$(UNTRUSTED_SUFF)!"; exit 1; }
 	@mv $@$(UNTRUSTED_SUFF) $@
