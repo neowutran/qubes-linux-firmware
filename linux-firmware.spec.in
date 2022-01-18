@@ -1,5 +1,5 @@
 %global debug_package %{nil}
-%global firmware_release 126
+%global firmware_release 127
 
 %global _firmwarepath	/usr/lib/firmware
 %define _binaries_in_noarch_packages_terminate_build 0
