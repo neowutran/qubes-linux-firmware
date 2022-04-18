@@ -1,0 +1,8 @@
+host:
+  rpm:
+    spec:
+    - linux-firmware.spec
+source:
+  files:
+  - url: https://www.kernel.org/pub/linux/kernel/firmware/linux-firmware-20211216.tar.xz
+    sha512: linux-firmware-20211216.tar.xz.sha512
