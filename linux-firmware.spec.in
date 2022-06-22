@@ -1,5 +1,5 @@
 %global debug_package %{nil}
-%global firmware_release 127
+%global firmware_release 135
 
 %global _firmwarepath	/usr/lib/firmware
 %define _binaries_in_noarch_packages_terminate_build 0
@@ -278,6 +278,13 @@ Requires:	linux-firmware-whence
 %description -n mrvlprestera-firmware
 Firmware for Marvell Prestera Switchdev/ASIC devices
 
+%package -n mlxsw_spectrum-firmware
+Summary:	Firmware for Mellanox Spectrum 1/2/3 Switches
+License:	Redistributable, no modification permitted
+Requires:	linux-firmware-whence
+%description -n mlxsw_spectrum-firmware
+Firmware for Mellanox Spectrumi series 1/2/3 ethernet switches.
+
 %prep
 %autosetup -p1
 
@@ -334,8 +341,10 @@ sed -i -e 's:^./::' linux-firmware.{files,dirs}
 sed -i -e '/^iwlwifi/d' \
 	-i -e '/^libertas\/sd8686/d' \
 	-i -e '/^libertas\/usb8388/d' \
-	-i -e '/^mrvl\/sd8787/d' \
 	-i -e '/^liquidio/d' \
+	-i -e '/^mellanox/d' \
+	-i -e '/^mrvl\/prestera/d' \
+	-i -e '/^mrvl\/sd8787/d' \
 	-i -e '/^netronome/d' \
 	linux-firmware.files
 sed -i -e 's!^!/usr/lib/firmware/!' linux-firmware.{files,dirs}
@@ -462,6 +471,11 @@ sed -e 's/^/%%dir /' linux-firmware.dirs >> linux-firmware.files
 %license LICENCE.Marvell
 %dir %{_firmwarepath}/mrvl/prestera
 %{_firmwarepath}/mrvl/prestera/*
+
+%files -n mlxsw_spectrum-firmware
+%dir %{_firmwarepath}/mellanox/
+%{_firmwarepath}/mellanox/*
+
 
 # BEGIN QUBES SPECIFIC PART
 %post
