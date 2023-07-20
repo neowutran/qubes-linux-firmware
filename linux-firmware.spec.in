@@ -13,8 +13,11 @@ URL:		http://www.kernel.org/
 BuildArch:	noarch
 
 Source0:	https://www.kernel.org/pub/linux/kernel/firmware/%{name}-%{version}.tar.xz
+Patch1:     linux-firmware_Update_AMD_cpu_microcode.patch
+Patch2:     20230719_john_allen_linux_firmware_update_amd_fam17h_cpu_microcode.mbx
 
 BuildRequires:	make
+BuildRequires:	git
 Requires:	linux-firmware-whence
 Provides:	kernel-firmware = %{version}
 Obsoletes:	kernel-firmware < %{version}
@@ -226,7 +229,7 @@ cx23885, cx23840, cx231xx), Xceive xc4000/xc5000, DiBcom dib0700,
 Terratec H5 DRX-K, ITEtech IT9135 Ax and Bx, and av7110.
 
 %prep
-%autosetup -p1
+%autosetup -p1 -S git
 
 %build
 
