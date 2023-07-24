@@ -1,16 +1,16 @@
 %global debug_package %{nil}
-%global firmware_release 146
 
 %global _firmwarepath	/usr/lib/firmware
 %define _binaries_in_noarch_packages_terminate_build 0
 
 Name:		linux-firmware
 Version:	@VERSION@
-Release:	%{firmware_release}%{?dist}
+Release:	@REL@%{?dist}
 Summary:	Firmware files used by the Linux kernel
 License:	GPL+ and GPLv2+ and MIT and Redistributable, no modification permitted
 URL:		http://www.kernel.org/
 BuildArch:	noarch
+Epoch:      1
 
 Source0:	https://www.kernel.org/pub/linux/kernel/firmware/%{name}-%{version}.tar.xz
 Patch1:     linux-firmware_Update_AMD_cpu_microcode.patch
