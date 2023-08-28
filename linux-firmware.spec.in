@@ -13,11 +13,11 @@ BuildArch:	noarch
 Epoch:      1
 
 Source0:	https://www.kernel.org/pub/linux/kernel/firmware/%{name}-%{version}.tar.xz
-Patch1:     linux-firmware_Update_AMD_cpu_microcode.patch
-Patch2:     20230719_john_allen_linux_firmware_update_amd_fam17h_cpu_microcode.mbx
+Patch1:		0001-linux-firmware-Update-AMD-cpu-microcode.patch
 
 BuildRequires:	make
-BuildRequires:	git
+BuildRequires:	git-core
+
 Requires:	linux-firmware-whence
 Provides:	kernel-firmware = %{version}
 Obsoletes:	kernel-firmware < %{version}
@@ -26,10 +26,18 @@ Conflicts:	microcode_ctl < 2.1-0
 Recommends:	amd-gpu-firmware
 Recommends:	intel-gpu-firmware
 Recommends:	nvidia-gpu-firmware
+Recommends:	atheros-firmware
+Recommends:	brcmfmac-firmware
+Recommends:	mt7xxx-firmware
+Recommends:	realtek-firmware
 %else
 Requires:	amd-gpu-firmware
 Requires:	intel-gpu-firmware
 Requires:	nvidia-gpu-firmware
+Requires:	atheros-firmware
+Requires:	brcmfmac-firmware
+Requires:	mt7xxx-firmware
+Requires:	realtek-firmware
 %endif
 
 %description
@@ -91,8 +99,9 @@ Provides:	iwl3945-firmware = %{epoch}:%{version}-%{release}
 Provides:	iwl4965-firmware = %{epoch}:%{version}-%{release}
 %description -n iwlegacy-firmware
 This package contains the firmware required by the iwlegacy driver
-for Linux.  Usage of the firmware is subject to the terms and conditions
-contained inside the provided LICENSE file. Please read it carefully.
+for Linux. This includes the 3945(A)BG and 4965AGN WiFi NICs. Usage
+of the firmware is subject to the terms and conditions contained
+inside the provided LICENSE file. Please read it carefully.
 
 %package -n iwlwifi-dvm-firmware
 Summary:	DVM Firmware for Intel(R) Wireless WiFi adapters
@@ -124,7 +133,7 @@ Provides:	iwl6000g2b-firmware = %{epoch}:%{version}-%{release}
 Provides:	iwl6050-firmware = %{epoch}:%{version}-%{release}
 %description -n iwlwifi-dvm-firmware
 This package contains the firmware required by the iwlwifi driver
-for Linux built with DVM firmware support (CONFIG_IWLDVM=y/m).  Usage of
+for Linux built with DVM firmware support (CONFIG_IWLDVM=y/m). Usage of
 the firmware is subject to the terms and conditions contained inside the
 provided LICENSE file. Please read it carefully.
 
@@ -144,35 +153,21 @@ for Linux built with MVM firmware support (CONFIG_IWLMVM=y/m).  Usage of
 the firmware is subject to the terms and conditions contained inside the
 provided LICENSE file. Please read it carefully.
 
-%package -n libertas-sd8686-firmware
-Summary:	Firmware for Marvell Libertas SD 8686 Network Adapter
+%package -n libertas-firmware
+Summary:	Firmware for Marvell Libertas SD/USB WiFi Network Adapters
 License:	Redistributable, no modification permitted
 Requires:	linux-firmware-whence
-%description -n libertas-sd8686-firmware
-Firmware for Marvell Libertas SD 8686 Network Adapter
-
-%package -n libertas-sd8787-firmware
-Summary:	Firmware for Marvell Libertas SD 8787 Network Adapter
-License:	Redistributable, no modification permitted
-Requires:	linux-firmware-whence
-%description -n libertas-sd8787-firmware
-Firmware for Marvell Libertas SD 8787 Network Adapter
-
-%package -n libertas-usb8388-firmware
-Summary:	Firmware for Marvell Libertas USB 8388 Network Adapter
-License:	Redistributable, no modification permitted
-Epoch:		2 
-Requires:	linux-firmware-whence
-%description -n libertas-usb8388-firmware
-Firmware for Marvell Libertas USB 8388 Network Adapter
-
-%package -n libertas-usb8388-olpc-firmware
-Summary:	OLPC firmware for Marvell Libertas USB 8388 Network Adapter
-License:	Redistributable, no modification permitted
-Requires:	linux-firmware-whence
-%description -n libertas-usb8388-olpc-firmware
-Firmware for Marvell Libertas USB 8388 Network Adapter with OLPC mesh network
-support.
+Obsoletes:      libertas-sd8686-firmware < %{epoch}:%{version}-%{release}
+Obsoletes:      libertas-sd8787-firmware < %{epoch}:%{version}-%{release}
+Obsoletes:      libertas-usb8388-firmware < 2:%{version}-%{release}
+Obsoletes:      libertas-usb8388-olpc-firmware < %{epoch}:%{version}-%{release}
+Provides:       libertas-sd8686-firmware < %{epoch}:%{version}-%{release}
+Provides:       libertas-sd8787-firmware < %{epoch}:%{version}-%{release}
+Provides:       libertas-usb8388-firmware < 2:%{version}-%{release}
+Provides:       libertas-usb8388-olpc-firmware < %{epoch}:%{version}-%{release}
+%description -n libertas-firmware
+Firmware for the Marvell Libertas series of WiFi Network Adapters
+Including the SD 8686/8787 and USB 8388/8388.
 
 %package -n mt7xxx-firmware
 Summary:	Firmware for Mediatek 7600/7900 series WiFi/Bluetooth adapters
@@ -217,6 +212,16 @@ Requires:	linux-firmware-whence
 %description -n netronome-firmware
 Firmware for Netronome Smart NICs
 
+%package -n qcom-firmware
+Summary:	Firmware for Qualcomm SoCs
+License:	Redistributable, no modification permitted
+Requires:	linux-firmware-whence
+Requires:	atheros-firmware = %{epoch}:%{version}-%{release}
+%description -n qcom-firmware
+Firmware for various compoents in Qualcomm SoCs including Adreno
+GPUs, Venus video encode/decode, Audio DSP, Compute DSP, WWAN
+modem, Sensor DSPs.
+
 # Random other hardware
 %package -n dvb-firmware
 Summary:	Firmware for various DVB broadcast receivers
@@ -229,7 +234,7 @@ cx23885, cx23840, cx231xx), Xceive xc4000/xc5000, DiBcom dib0700,
 Terratec H5 DRX-K, ITEtech IT9135 Ax and Bx, and av7110.
 
 %prep
-%autosetup -p1 -S git
+%autosetup -S git -p1
 
 %build
 
@@ -308,6 +313,7 @@ sed \
 	-i -e '/^mrvl\/sd8787/d' \
 	-i -e '/^netronome/d' \
 	-i -e '/^qca/d' \
+	-i -e '/^qcom/d' \
 	-i -e '/^radeon/d' \
 	-i -e '/^rtl_bt/d' \
 	-i -e '/^rtlwifi/d' \
@@ -401,25 +407,14 @@ sed -e 's/^/%%dir /' linux-firmware.dirs >> linux-firmware.files
 %{_firmwarepath}/iwlwifi-ty-a0*
 %{_firmwarepath}/iwlwifi-so-a0*
 
-%files -n libertas-sd8686-firmware
+%files -n libertas-firmware
 %license LICENCE.Marvell
 %dir %{_firmwarepath}/libertas
-%{_firmwarepath}/libertas/sd8686*
-
-%files -n libertas-sd8787-firmware
-%license LICENCE.Marvell
 %dir %{_firmwarepath}/mrvl
-%{_firmwarepath}/mrvl/sd8787*
-
-%files -n libertas-usb8388-firmware
-%license LICENCE.Marvell
-%dir %{_firmwarepath}/libertas
-%{_firmwarepath}/libertas/usb8388_v9.bin*
-
-%files -n libertas-usb8388-olpc-firmware
-%license LICENCE.Marvell
-%dir %{_firmwarepath}/libertas
+%{_firmwarepath}/libertas/sd8686*
 %{_firmwarepath}/libertas/usb8388_olpc.bin*
+%{_firmwarepath}/libertas/usb8388_v9.bin*
+%{_firmwarepath}/mrvl/sd8787*
 
 %files -n mt7xxx-firmware
 %license LICENCE.mediatek
@@ -456,6 +451,12 @@ sed -e 's/^/%%dir /' linux-firmware.dirs >> linux-firmware.files
 %license LICENCE.Netronome
 %dir %{_firmwarepath}/netronome
 %{_firmwarepath}/netronome/*
+
+# Silicon Vendor specific
+%files -n qcom-firmware
+%license LICENSE.qcom LICENSE.qcom_yamato qcom/NOTICE.txt
+%dir %{_firmwarepath}/qcom
+%{_firmwarepath}/qcom/*
 
 # Random other hardware
 %files -n dvb-firmware
