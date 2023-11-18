@@ -16,6 +16,7 @@ Source0:	https://www.kernel.org/pub/linux/kernel/firmware/%{name}-%{version}.tar
 
 BuildRequires:	make
 BuildRequires:	git-core
+BuildRequires:	rdfind
 
 Requires:	linux-firmware-whence
 Provides:	kernel-firmware = %{version}
@@ -81,7 +82,7 @@ Summary:	Microcode updates for AMD CPUs
 License:	Redistributable, no modification permitted
 Requires:	linux-firmware-whence
 %description -n amd-ucode-firmware
-Microcode updates for AMD CPUs.
+Microcode updates for AMD CPUs, AMD SEV amd TEE.
 
 # WiFi/Bluetooth firmwares
 %package -n atheros-firmware
@@ -294,6 +295,8 @@ popd
 sed -i -e 's:^./::' linux-firmware.{files,dirs}
 sed \
 	-i -e '/^amdgpu/d' \
+	-i -e '/^amd/d' \
+	-i -e '/^amdtee/d' \
 	-i -e '/^amd-ucode/d' \
 	-i -e '/^ar3k/d' \
 	-i -e '/^ath6k/d' \
@@ -364,6 +367,8 @@ sed -e 's/^/%%dir /' linux-firmware.dirs >> linux-firmware.files
 # Microcode updates
 %files -n amd-ucode-firmware
 %license LICENSE.amd-ucode
+%{_firmwarepath}/amd/
+%{_firmwarepath}/amdtee/
 %{_firmwarepath}/amd-ucode/
 
 # WiFi/Bluetooth firmwares
