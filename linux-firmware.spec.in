@@ -13,7 +13,6 @@ BuildArch:	noarch
 Epoch:      1
 
 Source0:	https://www.kernel.org/pub/linux/kernel/firmware/%{name}-%{version}.tar.xz
-Patch1:		0001-linux-firmware-Update-AMD-cpu-microcode.patch
 
 BuildRequires:	make
 BuildRequires:	git-core
@@ -26,6 +25,7 @@ Conflicts:	microcode_ctl < 2.1-0
 Recommends:	amd-gpu-firmware
 Recommends:	intel-gpu-firmware
 Recommends:	nvidia-gpu-firmware
+Recommends:	amd-ucode-firmware
 Recommends:	atheros-firmware
 Recommends:	brcmfmac-firmware
 Recommends:	mt7xxx-firmware
@@ -34,6 +34,7 @@ Recommends:	realtek-firmware
 Requires:	amd-gpu-firmware
 Requires:	intel-gpu-firmware
 Requires:	nvidia-gpu-firmware
+Requires:	amd-ucode-firmware
 Requires:	atheros-firmware
 Requires:	brcmfmac-firmware
 Requires:	mt7xxx-firmware
@@ -73,6 +74,14 @@ License:	Redistributable, no modification permitted
 Requires:	linux-firmware-whence
 %description -n nvidia-gpu-firmware
 Firmware for NVIDIA GPUs.
+
+# Microcode updates
+%package -n amd-ucode-firmware
+Summary:	Microcode updates for AMD CPUs
+License:	Redistributable, no modification permitted
+Requires:	linux-firmware-whence
+%description -n amd-ucode-firmware
+Microcode updates for AMD CPUs.
 
 # WiFi/Bluetooth firmwares
 %package -n atheros-firmware
@@ -285,6 +294,7 @@ popd
 sed -i -e 's:^./::' linux-firmware.{files,dirs}
 sed \
 	-i -e '/^amdgpu/d' \
+	-i -e '/^amd-ucode/d' \
 	-i -e '/^ar3k/d' \
 	-i -e '/^ath6k/d' \
 	-i -e '/^ath9k_htc/d' \
@@ -351,6 +361,11 @@ sed -e 's/^/%%dir /' linux-firmware.dirs >> linux-firmware.files
 %{_firmwarepath}/nvidia/g*/
 %{_firmwarepath}/nvidia/tu*/
 
+# Microcode updates
+%files -n amd-ucode-firmware
+%license LICENSE.amd-ucode
+%{_firmwarepath}/amd-ucode/
+
 # WiFi/Bluetooth firmwares
 %files -n atheros-firmware
 %license LICENCE.atheros_firmware
@@ -403,6 +418,8 @@ sed -e 's/^/%%dir /' linux-firmware.dirs >> linux-firmware.files
 %{_firmwarepath}/iwlwifi-9000-*.ucode*
 %{_firmwarepath}/iwlwifi-9260-*.ucode*
 %{_firmwarepath}/iwlwifi-cc-a0-*.ucode*
+%{_firmwarepath}/iwlwifi-gl-c0*
+%{_firmwarepath}/iwlwifi-ma-b0*
 %{_firmwarepath}/iwlwifi-Qu*.ucode*
 %{_firmwarepath}/iwlwifi-ty-a0*
 %{_firmwarepath}/iwlwifi-so-a0*
